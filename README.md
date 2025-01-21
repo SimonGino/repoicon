@@ -93,19 +93,32 @@ git clone https://github.com/SimonGino/repoicon.git
 cd repoicon
 ```
 
-3. Create a `.env` file in the root directory:
+3. Create a `.env` file in the root directory (you can copy from .env.example):
 ```bash
-TONGYI_API_KEY=your_api_key_here
+cp .env.example .env
 ```
 
-4. Build and start the containers:
+4. Configure your environment variables in `.env`:
+```bash
+# Required
+TONGYI_API_KEY=your_api_key_here
+
+# Optional - change these if the default ports are in use
+API_HOST=localhost
+BACKEND_PORT=8000
+FRONTEND_PORT=5173
+```
+
+5. Build and start the containers:
 ```bash
 docker-compose up --build
 ```
 
 The application will be available at:
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:8000`
+- Frontend: `http://localhost:{FRONTEND_PORT}` (default: 5173)
+- Backend: `http://localhost:{BACKEND_PORT}` (default: 8000)
+
+To use different ports, simply change the values in your `.env` file.
 
 To stop the containers:
 ```bash

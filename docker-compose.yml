@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: docker/frontend.Dockerfile
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:5173"
     environment:
-      - VITE_API_URL=http://backend:8000
+      - VITE_API_URL=http://${API_HOST:-localhost}:${BACKEND_PORT:-8000}
     depends_on:
       - backend
 
@@ -17,8 +17,10 @@ services:
       context: .
       dockerfile: docker/backend.Dockerfile
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT:-8000}:8000"
     environment:
       - TONGYI_API_KEY=${TONGYI_API_KEY}
+      - HOST=${API_HOST:-0.0.0.0}
+      - PORT=${BACKEND_PORT:-8000}
     volumes:
       - ./backend:/app/backend 

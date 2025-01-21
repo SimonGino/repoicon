@@ -93,19 +93,32 @@ git clone https://github.com/SimonGino/repoicon.git
 cd repoicon
 ```
 
-3. 在根目录创建 `.env` 文件：
+3. 在根目录创建 `.env` 文件（可以从 .env.example 复制）：
 ```bash
-TONGYI_API_KEY=你的_API_密钥
+cp .env.example .env
 ```
 
-4. 构建并启动容器：
+4. 在 `.env` 文件中配置环境变量：
+```bash
+# 必需
+TONGYI_API_KEY=你的_API_密钥
+
+# 可选 - 如果默认端口被占用，可以修改这些值
+API_HOST=localhost
+BACKEND_PORT=8000
+FRONTEND_PORT=5173
+```
+
+5. 构建并启动容器：
 ```bash
 docker-compose up --build
 ```
 
 应用将在以下地址可用：
-- 前端：`http://localhost:5173`
-- 后端：`http://localhost:8000`
+- 前端：`http://localhost:{FRONTEND_PORT}`（默认：5173）
+- 后端：`http://localhost:{BACKEND_PORT}`（默认：8000）
+
+如需使用不同的端口，只需在 `.env` 文件中修改相应的值即可。
 
 停止容器：
 ```bash

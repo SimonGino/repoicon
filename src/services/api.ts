@@ -2,12 +2,13 @@ import axios from 'axios';
 import type { GitHubRepo, ImageGenerationRequest, ImageGenerationResponse } from '../types';
 
 const GITHUB_API_BASE = 'https://api.github.com';
-const API_BASE = 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  baseURL: API_BASE,
 });
 
 export const getRepoInfo = async (owner: string, repo: string): Promise<GitHubRepo> => {
