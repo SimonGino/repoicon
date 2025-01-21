@@ -19,6 +19,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - TONGYI_API_KEY=sk-f184e0876e8a4f548360e2bb5966e90a 
+      - TONGYI_API_KEY=${TONGYI_API_KEY}
     volumes:
       - ./backend:/app/backend 
