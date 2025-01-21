@@ -2,7 +2,27 @@ import axios from 'axios';
 import type { GitHubRepo, ImageGenerationRequest, ImageGenerationResponse } from '../types';
 
 const GITHUB_API_BASE = 'https://api.github.com';
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+// 构建 API_BASE URL
+const buildApiBaseUrl = () => {
+  // 如果提供了完整的 API URL，直接使用
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+
+  const host = import.meta.env.API_HOST || 'localhost';
+  const port = import.meta.env.BACKEND_PORT || '8000';
+  const useHttps = import.meta.env.USE_HTTPS === 'true';
+  const protocol = useHttps ? 'https' : 'http';
+
+  // 如果是域名且使用标准端口（http:80 或 https:443），则不显示端口
+  const isStandardPort = (useHttps && port === '443') || (!useHttps && port === '80');
+  const portSuffix = isStandardPort ? '' : `:${port}`;
+
+  return `${protocol}://${host}${portSuffix}`;
+};
+
+const API_BASE = buildApiBaseUrl();
 
 const api = axios.create({
   headers: {
