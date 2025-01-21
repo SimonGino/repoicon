@@ -1,11 +1,11 @@
-# Use Python 3.10 slim image
-FROM python:3.10-slim
+# Use Python 3.12 slim image
+FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
 
 # Install PDM
-RUN pip install pdm
+RUN pip install -U pip pdm
 
 # Copy PDM files
 COPY backend/pyproject.toml backend/pdm.lock ./
