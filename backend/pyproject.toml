@@ -1,0 +1,26 @@
+[project]
+name = "repoicon-backend"
+version = "0.1.0"
+description = "Backend service for RepoIcon"
+authors = []
+dependencies = [
+    "fastapi>=0.109.2",
+    "uvicorn>=0.27.1",
+    "python-dotenv>=1.0.1",
+    "httpx>=0.26.0",
+    "pydantic>=2.6.1",
+]
+requires-python = ">=3.9"
+
+[tool.pdm]
+package-type = "application"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "black>=24.1.1",
+    "isort>=5.13.2",
+    "pytest>=8.0.0",
+] 
+
+[tool.pdm.scripts]
+start = "uvicorn app.main:app --reload"
