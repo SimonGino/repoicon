@@ -192,8 +192,8 @@ def generate_prompt(repo_info: Dict[str, Any], readme_content: str = "") -> str:
 
 async def generate_prompt_with_qianwen(repo_info: Dict[str, Any], readme_content: str) -> str:
     """Use Qianwen to generate an optimized image prompt."""
-    name = repo_info["name"]
-    description = repo_info.get("description", "").strip()
+    name = repo_info.get("name", "")
+    description = repo_info.get("description") or ""  # 使用 or 运算符处理 None
     language = repo_info.get("language", "").lower()
     
     # Prepare context for Qianwen
@@ -202,7 +202,7 @@ async def generate_prompt_with_qianwen(repo_info: Dict[str, Any], readme_content
 Repository Details:
 - Name: {name}
 - Language: {language}
-- Description: {description}
+- Description: {description.strip()}
 - README Excerpt: {readme_content[:500]}
 
 Requirements:
