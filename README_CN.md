@@ -81,6 +81,39 @@ npm run dev
 4. 等待 AI 分析仓库并生成图标
 5. 下载生成的图标
 
+## 部署
+
+### 使用 Docker（推荐）
+
+1. 在系统上安装 Docker 和 Docker Compose
+
+2. 克隆仓库：
+```bash
+git clone https://github.com/SimonGino/repoicon.git
+cd repoicon
+```
+
+3. 在根目录创建 `.env` 文件：
+```bash
+TONGYI_API_KEY=你的_API_密钥
+```
+
+4. 构建并启动容器：
+```bash
+docker-compose up --build
+```
+
+应用将在以下地址可用：
+- 前端：`http://localhost:5173`
+- 后端：`http://localhost:8000`
+
+停止容器：
+```bash
+docker-compose down
+```
+
+### 手动安装
+
 ## 贡献
 
 欢迎贡献！请随时提交 Pull Request。

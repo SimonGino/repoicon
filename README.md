@@ -81,6 +81,39 @@ The application will be available at `http://localhost:5173`
 4. Wait for the AI to analyze the repository and generate an icon
 5. Download the generated icon
 
+## Deployment
+
+### Using Docker (Recommended)
+
+1. Install Docker and Docker Compose on your system
+
+2. Clone the repository:
+```bash
+git clone https://github.com/SimonGino/repoicon.git
+cd repoicon
+```
+
+3. Create a `.env` file in the root directory:
+```bash
+TONGYI_API_KEY=your_api_key_here
+```
+
+4. Build and start the containers:
+```bash
+docker-compose up --build
+```
+
+The application will be available at:
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8000`
+
+To stop the containers:
+```bash
+docker-compose down
+```
+
+### Manual Installation
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

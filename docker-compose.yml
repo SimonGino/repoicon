@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:8000
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - TONGYI_API_KEY=sk-f184e0876e8a4f548360e2bb5966e90a 
+    volumes:
+      - ./backend:/app/backend 
