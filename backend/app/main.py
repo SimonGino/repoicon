@@ -33,17 +33,7 @@ DASHSCOPE_API_BASE = "https://dashscope.aliyuncs.com/api/v1"
 class RepoUrlRequest(BaseModel):
     url: HttpUrl
 
-class ImageGenerationRequest(BaseModel):
-    prompt: str
-    negative_prompt: str | None = None
-    n: int = 1
-    size: str = "32*32"
-
-class TaskResponse(BaseModel):
-    task_id: str
-    task_status: str
-    results: Optional[List[Dict[str, Any]]] = None
-    error: Optional[Dict[str, str]] = None
+# 删除 ImageGenerationRequest 和 TaskResponse 类
 
 def parse_github_url(url: str) -> tuple[str, str]:
     """Extract owner and repo name from GitHub URL."""
@@ -96,125 +86,29 @@ async def get_readme_content(owner: str, repo: str) -> str:
                 return ""
         return ""
 
-def extract_key_concepts(text: str, max_words: int = 5) -> List[str]:
-    """Extract key concepts from text, filtering out common words and code-related terms."""
-    common_words = {
-        'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as',
-        'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will',
-        'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which',
-        'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'people', 'into', 'year',
-        'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its',
-        'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even',
-        'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
-        # Code-related common terms to filter
-        'code', 'install', 'using', 'used', 'example', 'file', 'files', 'data', 'function', 'method', 'class', 'object',
-        'package', 'module', 'library', 'framework', 'api', 'documentation', 'docs', 'readme', 'installation', 'usage',
-        'contributing', 'license', 'test', 'testing', 'build', 'run', 'running', 'setup', 'configure', 'configuration'
-    }
-    
-    # Split text into words and clean them
-    words = text.lower().replace('\n', ' ').split()
-    words = [w.strip('.,!?()[]{}#*-_=+<>') for w in words]
-    
-    # Filter words
-    meaningful_words = [
-        word for word in words 
-        if word and len(word) > 2  # Skip very short words
-        and word not in common_words  # Skip common words
-        and not word.startswith(('http', 'https', '#', '@'))  # Skip URLs and mentions
-        and not any(c in word for c in '`\'"/\\')  # Skip code snippets and paths
-    ]
-    
-    # Get unique words by frequency
-    word_freq = {}
-    for word in meaningful_words:
-        word_freq[word] = word_freq.get(word, 0) + 1
-    
-    # Sort by frequency and get top words
-    top_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
-    return [word for word, _ in top_words[:max_words]]
-
-def generate_prompt(repo_info: Dict[str, Any], readme_content: str = "") -> str:
-    """Generate an image prompt based on repository information and README content."""
-    name = repo_info["name"]
-    description = repo_info.get("description", "").strip()
-    language = repo_info.get("language", "").lower()
-    
-    # Extract key concepts from description and README
-    key_concepts = []
-    if description:
-        key_concepts.extend(extract_key_concepts(description, 3))
-    if readme_content:
-        key_concepts.extend(extract_key_concepts(readme_content, 3))
-    key_concepts = list(dict.fromkeys(key_concepts))  # Remove duplicates
-    
-    # Base prompt components for icon generation
-    components = [
-        f"minimalist icon representing {name}",
-        "modern app icon design",
-        "flat design",
-        "simple geometric shapes",
-        "clean vector style",
-        "no text or letters",
-        "suitable for GitHub repository icon",
-        "professional branding",
-        "high contrast",
-        "scalable design"
-    ]
-    
-    # Add language-specific elements
-    language_elements = {
-        "python": "blue and yellow color scheme, subtle snake-like curves",
-        "javascript": "modern geometric design in yellow and black",
-        "typescript": "clean geometric shapes in blue tones",
-        "rust": "warm orange and metallic elements",
-        "go": "light blue tones with curved elements",
-        "java": "red and white color scheme with curved elements",
-        "c++": "modern design in blue tones",
-        "ruby": "elegant gem-inspired shapes in red",
-    }
-    
-    if language.lower() in language_elements:
-        components.append(language_elements[language.lower()])
-    
-    # Add key concepts from description and README
-    if key_concepts:
-        concepts_str = " and ".join(key_concepts[:3])
-        components.append(f"incorporating visual elements suggesting {concepts_str}")
-    
-    # Join all components
-    prompt = ", ".join(components)
-    
-    # Add strong styling directives
-    prompt += ". Absolutely no text or letters in the design. Pure iconographic representation."
-    
-    return prompt
+# 删除整个 generate_prompt 函数
 
 async def generate_prompt_with_qianwen(repo_info: Dict[str, Any], readme_content: str) -> str:
     """Use Qianwen to generate an optimized image prompt."""
     name = repo_info.get("name", "")
-    description = repo_info.get("description") or ""  # 使用 or 运算符处理 None
-    language = repo_info.get("language", "").lower()
+    description = repo_info.get("description") or ""
     
     # Prepare context for Qianwen
-    context = f"""Generate an image generation prompt for a minimalist GitHub repository icon.
+    context = f"""Create an image generation prompt for a GitHub repository icon.
 
-Repository Details:
+Repository Information:
 - Name: {name}
-- Language: {language}
-- Description: {description.strip()}
-- README Excerpt: {readme_content[:500]}
+- Purpose: {description.strip()}
+- Details: {readme_content[:300]}
 
-Requirements:
-1. Create a minimalist, modern icon design
-2. NO text or letters in the design
-3. Use simple geometric shapes
-4. Incorporate the project's essence
-5. Consider the programming language's identity ({language})
-6. Keep it professional and suitable for GitHub
+Guidelines:
+1. Focus on the repository's core functionality and purpose
+2. Create a symbolic representation of what this project does
+3. Keep the design clean and minimalist
+4. No text or letters allowed
 
-Focus on visual elements that represent the core purpose of the repository.
-Format the response as a clear, concise image generation prompt."""
+The prompt should emphasize WHAT the repository does rather than HOW it looks.
+Format your response as a concise image generation prompt."""
 
     async with httpx.AsyncClient() as client:
         try:
@@ -229,7 +123,7 @@ Format the response as a clear, concise image generation prompt."""
                     "messages": [
                         {
                             "role": "system",
-                            "content": "You are an expert at creating image generation prompts. Create clear, detailed prompts that will result in minimalist, professional icons. Focus on visual elements and avoid any text in the design. Your responses should be direct image generation prompts without any explanation or conversation."
+                            "content": "You are an expert at understanding software projects and converting their core purpose into visual concepts. Focus on what the project does and create prompts that will generate meaningful icons."
                         },
                         {
                             "role": "user",
@@ -244,10 +138,8 @@ Format the response as a clear, concise image generation prompt."""
             
             if "choices" in result and len(result["choices"]) > 0:
                 generated_prompt = result["choices"][0]["message"]["content"].strip()
-                
-                # Add our standard constraints
-                generated_prompt += ", minimalist icon design, no text, no letters, clean vector style, professional branding, high contrast, scalable design"
-                
+                # 只添加最基本的设计约束
+                generated_prompt += ", minimalist style, no text"
                 return generated_prompt
             
             raise HTTPException(
@@ -298,15 +190,14 @@ async def generate_repo_icon(request: RepoUrlRequest):
             response = await client.post(
                 f"{DASHSCOPE_API_BASE}/services/aigc/text2image/image-synthesis",
                 json={
-                    "model": "wanx2.1-t2i-turbo",
+                    "model": "flux-dev",
                     "input": {
                         "prompt": prompt,
                         "negative_prompt": "icon"
                     },
                     "parameters": {
-                        "n": 1,
-                        "size": "1024*1024",
-                        "style": "minimalism",
+                        "steps": 50,
+                        "size": "1024*1024"
                     },
                 },
                 headers={
@@ -382,4 +273,4 @@ async def check_image_status(task_id: str):
             }
 
     except httpx.HTTPError as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))
